@@ -2,25 +2,42 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI;
+package GUI.Client;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  *
  * @author gabri
  */
-public class MainFrame extends javax.swing.JFrame {
+public class ClientFrame extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFrame.class.getName());
-
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ClientFrame.class.getName());
+    private Client client;
+    private modelClient model;
+    private controllerClient controller;
+    
+    private String name;
+    
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+    public ClientFrame() {
         initComponents();
+        name = JOptionPane.showInputDialog(this, "Ingrese su nombre: ");
+        if (name == null || name.trim().isEmpty()) {
+            name = "Civilization_" + System.currentTimeMillis();
+        }
+        client = new Client(this, name);
+        
+        // Inicializar modelo y controlador
+        this.model = new modelClient(this.client);
+        this.controller = new controllerClient(this.model, this);
     }
 
     /**
@@ -350,7 +367,7 @@ public class MainFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new MainFrame().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ClientFrame().setVisible(true));
     }
 
     public void setLblCharacter1(JLabel lblCharacter1) {
@@ -405,6 +422,41 @@ public class MainFrame extends javax.swing.JFrame {
         this.txtConsoleLog.append(consoleLog);
     }
 
+    public JButton getBtnConsoleSend() {
+        return btnConsoleSend;
+    }
+
+    public JTextArea getTxaEnemy() {
+        return txaEnemy;
+    }
+
+    public JTextArea getTxaEnemyAttackInfo() {
+        return txaEnemyAttackInfo;
+    }
+
+    public JTextArea getTxaMyAttackInfo() {
+        return txaMyAttackInfo;
+    }
+
+    public JTextArea getTxaMyStatus() {
+        return txaMyStatus;
+    }
+
+    public JTextArea getTxaRanking() {
+        return txaRanking;
+    }
+
+    public JTextField getTxfConsoleInput() {
+        return txfConsoleInput;
+    }
+
+    public JTextArea getTxtConsoleLog() {
+        return txtConsoleLog;
+    }
+    
+    public void writeMessage(String msg){
+        txtConsoleLog.append(msg + "\n");
+    }
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
