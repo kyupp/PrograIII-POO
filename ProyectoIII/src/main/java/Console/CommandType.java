@@ -13,7 +13,13 @@ public enum CommandType {
     MESSAGE (2), //message hola a todos
     PRIVATE_MESSAGE(3), //private Andres hola andres
     GIVEUP (1), //giveup
-    NAME (2);
+    NAME (2),
+    READY (1),
+    PASS_TURN (1),
+    USE_WILDCARD (2),
+    MUTUAL_EXIT (1),
+    SELECT_PLAYER (2),
+    RELOAD (1);
     //.. AGREGARÍAN MÁS TIPOS DE COMANDO
     
     

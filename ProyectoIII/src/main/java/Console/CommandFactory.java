@@ -25,6 +25,18 @@ public class CommandFactory {
                 return new CommandGiveup(args);
             case "NAME":
                 return new CommandName(args);
+            case "READY":
+                return new CommandReady(args);
+            case "USE_WILDCARD":
+                return new CommandUseWildcard(args);
+            case "RELOAD":
+                return new CommandReload(args);
+            case "SELECT_PLAYER":
+                return new CommandSelectPlayer(args);
+            case "PASS_TURN":
+                return new CommandPassTurn(args);
+            case "MUTAL_EXIT":
+                return new CommandMutualExit(args);
             default:
                 return null;
         }
