@@ -15,7 +15,7 @@ public class Log {
 
     private static final String FILE = "Log.txt";
 
-    public static void log(String linea) {
+    public static void logInTxt(String linea) {
         try (FileWriter writer = new FileWriter(FILE, true)) {
             writer.write(linea + System.lineSeparator());
         } catch (IOException e) {
