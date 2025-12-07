@@ -36,7 +36,6 @@ public class Server {
         try {
             serverSocket = new ServerSocket(PORT);
             refFrame.writeMessage("Server running!!!");
-            refFrame.writeMessage("GameController inicializado");
         } catch (IOException ex) {
             refFrame.writeMessage("Error: " + ex.getMessage());
         }
