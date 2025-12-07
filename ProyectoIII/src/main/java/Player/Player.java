@@ -37,4 +37,32 @@ public class Player {
         return id;
     }
 
+    public List<Fighter> getTeam() {
+        return team;
+    }
+
+    public int getSuccessfulAttacks() {
+        return successfulAttacks;
+    }
+
+    public int getFailedAttacks() {
+        return failedAttacks;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public int getDefeats() {
+        return defeats;
+    }
+
+    public int getSurrenders() {
+        return surrenders;
+    }
+    
 }

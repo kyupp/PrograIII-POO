@@ -35,4 +35,21 @@ public class Fighter {
     public boolean isDead() { 
         return life == 0; 
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public List<Weapon> getWeapons() {
+        return weapons;
+    }
+    
 }

@@ -42,7 +42,11 @@ public class Match {
     }
     
     public void log(Player player, String text) {
-    logs.get(player).add(LocalDateTime.now() + " - " + text);
-}
+        logs.get(player).add(LocalDateTime.now() + " - " + text);
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
     
 }

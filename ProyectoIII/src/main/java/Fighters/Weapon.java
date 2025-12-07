@@ -38,5 +38,13 @@ public class Weapon {
     public void setUsed() {
         used = true;
     }
-    
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
 }
