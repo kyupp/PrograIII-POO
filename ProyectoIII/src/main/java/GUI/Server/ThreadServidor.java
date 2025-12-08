@@ -5,6 +5,7 @@
 package GUI.Server;
 
 import Console.Command;
+import Console.CommandMessage;
 import Player.Player;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -134,6 +135,19 @@ public class ThreadServidor extends Thread{
             // Aquí podrías enviar un comando de error al cliente si implementas uno
         } catch (Exception e) {
             System.out.println("Error enviando mensaje de error: " + e.getMessage());
+        }
+    }
+    
+    public void sendPrivateMessage(String message) {
+        try {
+            // Formato: ["MESSAGE", texto, "false"]
+            String[] args = new String[]{"MESSAGE",message, "false"};
+            CommandMessage cmd = new CommandMessage(args);
+
+            objectSender.writeObject(cmd);
+            objectSender.flush();
+        } catch (IOException e) {
+            System.out.println("Error enviando mensaje privado: " + e.getMessage());
         }
     }
     

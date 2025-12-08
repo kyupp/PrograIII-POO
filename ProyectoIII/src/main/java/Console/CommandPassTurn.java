@@ -23,7 +23,15 @@ public class CommandPassTurn extends Command {
         if (game != null){
             game.nextTurn();
         } else{
-            //TODO; Retornar mensaje al usuaruio indicando que no se pudo ya que todavia no hay match
+            sendResponse(threadServidor, "ERROR: Aun no ha iniciado el juego");
+        }
+    }
+    
+    private void sendResponse(ThreadServidor thread, String message) {
+        try {
+            thread.sendPrivateMessage(message);
+        } catch (Exception e) {
+            System.out.println("Error enviando respuesta: " + e.getMessage());
         }
     }
     
