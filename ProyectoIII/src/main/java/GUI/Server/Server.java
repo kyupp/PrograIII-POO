@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class Server {
     private final int PORT = 35500;
+    private int playersReady = 0;
     private final int maxConections = 4;
     private ServerSocket serverSocket;
     private ArrayList<ThreadServidor> connectedClients;
@@ -29,6 +30,14 @@ public class Server {
         this.init();
         connectionsThread = new ThreadConnections(this);
         connectionsThread.start();
+    }
+
+    public int getPlayersReady() {
+        return playersReady;
+    }
+
+    public void setPlayersReady(int playersReady) {
+        this.playersReady = playersReady;
     }
     
     // Método que inicializa el server

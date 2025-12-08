@@ -19,7 +19,7 @@ public class CommandReady extends Command {
     @Override
     public void processForServer(ThreadServidor threadServidor) {
         System.out.println("READY");
-        //TODO: Logica
+        threadServidor.getServer().setPlayersReady(threadServidor.getServer().getPlayersReady() + 1);
     }
     
 }
