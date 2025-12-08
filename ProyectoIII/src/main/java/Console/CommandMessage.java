@@ -14,19 +14,39 @@ import GUI.Server.ThreadServidor;
 public class CommandMessage extends Command{
 
     public CommandMessage(String[] args) {
-        super(CommandType.MESSAGE, args);
+        // args: [0] = "MESSAGE", args[1..n-2] = texto, args[n-1] = broadcast
+        super(CommandType.MESSAGE, new String[]{ extractText(args) });
+
+        // Convertir último argumento a boolean
+        boolean broadcast = Boolean.parseBoolean(args[args.length - 1]);
+        this.setIsBroadcast(broadcast);
+    }
+
+    /** 
+     * Reconstruye el texto tomando todo entre args[1] y args[n-2]
+     */
+    private static String extractText(String[] args) {
+        if (args.length < 3) { 
+            return ""; 
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < args.length - 1; i++) {
+            sb.append(args[i]).append(" ");
+        }
+        return sb.toString().trim();
     }
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        this.setIsBroadcast(true);
-        
+        threadServidor.getServer().getRefFrame()
+            .writeMessage("[MSG] " + getParameters()[0] + " | Broadcast=" + isIsBroadcast());
     }
     
     @Override
     public void processInClient(Client client) {
         //Message "string"
-        client.getRefFrame().writeMessage("Mensaje recibido: " + this.getParameters()[1]);
+        client.getRefFrame().writeMessage("Mensaje recibido: " + this.getParameters()[0]);
     }
     
 }

@@ -4,7 +4,12 @@
  */
 package Console;
 
+import GUI.Client.Client;
+import GUI.Server.Server;
 import GUI.Server.ThreadServidor;
+import Match.Match;
+import Player.Player;
+import java.io.IOException;
 
 /**
  *
@@ -14,12 +19,52 @@ public class CommandReady extends Command {
 
     public CommandReady(String[] parameters) {
         super(CommandType.READY, parameters);
+        this.setIsBroadcast(false);
     }
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        System.out.println("READY");
-        threadServidor.getServer().setPlayersReady(threadServidor.getServer().getPlayersReady() + 1);
+
+        Server server = threadServidor.getServer();
+
+        // Si no existe partida → este jugador es el host
+        if (server.getGame() == null) {
+
+            Match match = new Match(threadServidor.getGamePlayer());
+            server.setGame(match);
+
+            // Avisar al host que es host
+            CommandMessage msgHost = new CommandMessage(
+                new String[]{"MESSAGE", 
+                    "Eres el host de la partida. Esperando jugadores...", 
+                    "false"}
+            );
+            
+            try {
+                threadServidor.objectSender.writeObject(msgHost);
+            } catch (IOException ex) {
+                System.out.println("No te dejaron");
+            }
+
+        } else {
+
+            // Ya existe partida → enviar solicitud al host
+            Match match = server.getGame();
+            Player host = match.getOwner();
+
+            ThreadServidor hostThread = server.buscarThreadServidor(host.getId());
+
+            if (hostThread != null) {
+                CommandReadyRequest request = new CommandReadyRequest(
+                    threadServidor.getClientName()
+                );
+                try {
+                    hostThread.objectSender.writeObject(request);
+                } catch (IOException ex) {
+                    System.out.println("No se encontro ningun cliente");
+                }
+            }
+        }
     }
-    
 }
+

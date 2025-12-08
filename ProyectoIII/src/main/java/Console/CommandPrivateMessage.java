@@ -11,20 +11,47 @@ import GUI.Server.ThreadServidor;
  *
  * @author diego
  */
-public class CommandPrivateMessage extends Command{
+public class CommandPrivateMessage extends Command {
 
     public CommandPrivateMessage(String[] args) {
-        super(CommandType.PRIVATE_MESSAGE, args);
+        // args: [0] = "PRIVATE_MESSAGE", [1] = nombreDestino, [2..n] = texto
+        super(
+            CommandType.PRIVATE_MESSAGE,
+            new String[]{ args[1], extractText(args) } 
+        );
+        
+        this.setIsBroadcast(false); // Siempre privado
+    }
+
+    /**
+     * Extrae el texto desde args[2] hasta el final.
+     */
+    private static String extractText(String[] args) {
+        if (args.length < 3) return "";
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 2; i < args.length; i++) {
+            sb.append(args[i]).append(" ");
+        }
+        return sb.toString().trim();
     }
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        this.setIsBroadcast(false);
+        threadServidor
+            .getServer()
+            .getRefFrame()
+            .writeMessage(
+                "[PRIVATE] De " + threadServidor.getClientName() +
+                " para " + getParameters()[0] +
+                ": " + getParameters()[1]
+            );
     }
-    
+
     @Override
     public void processInClient(Client client) {
-        //private_message Andres "Hola mundo"
-        client.getRefFrame().writeMessage("Mensaje para " + this.getParameters()[1] + ": " + this.getParameters()[2]);
+        client.getRefFrame().writeMessage(
+            "[Mensaje privado] " + getParameters()[1]
+        );
     }
 }

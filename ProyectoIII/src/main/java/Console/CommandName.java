@@ -20,6 +20,7 @@ public class CommandName extends Command{
     @Override
     public void processForServer(ThreadServidor threadServidor) {
         this.setIsBroadcast(true);
+        
         threadServidor.name = getParameters()[1];
         threadServidor.showAllClients();
     }

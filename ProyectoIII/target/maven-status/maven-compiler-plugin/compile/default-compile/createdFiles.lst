@@ -7,6 +7,7 @@ Console\CommandFactory.class
 Fighters\Fighter.class
 Console\CommandPrivateMessage.class
 Console\CommandReady.class
+Console\CommandReadyRequest.class
 com\mycompany\proyectoiii\Start$2.class
 Console\CommandPassTurn.class
 Console\CommandMutualExit.class
@@ -28,6 +29,7 @@ Console\Command.class
 Console\CommandGiveup.class
 GUI\Client\controllerClient.class
 GUI\Server\ThreadServidor.class
+Console\CommandApproveJoin.class
 Fighters\Type.class
 Player\Player.class
 Match\Match.class

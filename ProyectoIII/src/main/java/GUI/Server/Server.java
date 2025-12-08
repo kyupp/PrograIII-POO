@@ -6,6 +6,7 @@ package GUI.Server;
 
 import Console.Command;
 import GUI.Client.Client;
+import Match.Match;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -15,11 +16,11 @@ import java.util.ArrayList;
  */
 public class Server {
     private final int PORT = 35500;
-    private int playersReady = 0;
     private final int maxConections = 4;
     private ServerSocket serverSocket;
     private ArrayList<ThreadServidor> connectedClients;
     FrameServer refFrame;
+    private Match game;
     private ThreadConnections connectionsThread;
     
     
@@ -32,14 +33,14 @@ public class Server {
         connectionsThread.start();
     }
 
-    public int getPlayersReady() {
-        return playersReady;
+    public Match getGame() {
+        return game;
     }
 
-    public void setPlayersReady(int playersReady) {
-        this.playersReady = playersReady;
+    public void setGame(Match game) {
+        this.game = game;
     }
-    
+
     // Método que inicializa el server
     private void init(){
         try {
@@ -50,9 +51,7 @@ public class Server {
         }
     }
     
-    public ThreadServidor buscarThreadServidor(Client client){
-        
-        String nameClient = client.getName();
+    public ThreadServidor buscarThreadServidor(String nameClient){
         
         for (ThreadServidor clientThread : this.connectedClients){
             if (nameClient.equals(clientThread.getClientName())){
@@ -98,7 +97,6 @@ public class Server {
             }
         }
     }
-    
     // GETTERS
     
     public int getMaxConections() {

@@ -5,6 +5,7 @@
 package Console;
 
 import GUI.Server.ThreadServidor;
+import Match.Match;
 
 /**
  *
@@ -18,8 +19,12 @@ public class CommandPassTurn extends Command {
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        System.out.println("PASS TURN");
-        //TODO: Logica
+        Match game = threadServidor.getServer().getGame();
+        if (game != null){
+            game.nextTurn();
+        } else{
+            //TODO; Retornar mensaje al usuaruio indicando que no se pudo ya que todavia no hay match
+        }
     }
     
 }

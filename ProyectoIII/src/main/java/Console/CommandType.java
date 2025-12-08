@@ -19,7 +19,10 @@ public enum CommandType {
     USE_WILDCARD (2),
     MUTUAL_EXIT (1),
     SELECT_PLAYER (2),
-    RELOAD (1);
+    RELOAD (1),
+    APPROVE_JOIN(5),
+    READY_REQUEST(6);
+
     //.. AGREGARÍAN MÁS TIPOS DE COMANDO
     
     

@@ -17,6 +17,7 @@ public class Player {
     private List<Fighter> team;
 
     // Scores
+    private boolean isAlive;
     private int successfulAttacks;
     private int failedAttacks;
     private int deaths;
@@ -27,6 +28,7 @@ public class Player {
     public Player(String id) {
         this.id = id;
         this.team = new ArrayList<>();
+        this.isAlive = true;
     }
 
     public void addFighter(Fighter fighter) { 

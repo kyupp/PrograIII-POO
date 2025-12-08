@@ -5,6 +5,7 @@
 package GUI.Server;
 
 import Console.Command;
+import Player.Player;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class ThreadServidor extends Thread{
     private DataOutputStream escritor;
     private DataInputStream lector;
     public String name;
+    private Player gamePlayer;
     
     public boolean isActive = true;
     public boolean isRunning = true;
@@ -36,11 +38,16 @@ public class ThreadServidor extends Thread{
             objectSender = new ObjectOutputStream(socket.getOutputStream());
             objectSender.flush();
             objectListener = new ObjectInputStream(socket.getInputStream());
+            this.gamePlayer = new Player(this.name);
         } catch (IOException ex) {
             System.out.println("Error en ThreadServidor constructor: " + ex.getMessage());
         } catch (Exception ex){
             System.out.println("Error general en ThreadServidor: " + ex.getMessage());
         }
+    }
+
+    public Player getGamePlayer() {
+        return gamePlayer;
     }
     
     public void run() {

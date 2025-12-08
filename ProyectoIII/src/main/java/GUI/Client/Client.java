@@ -5,6 +5,7 @@
 package GUI.Client;
 
 import Console.CommandFactory;
+import Player.Player;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,6 +30,7 @@ public class Client {
         this.refFrame = refFrame;
         this.name = name;
         this.connect();
+        
     }
     
     private void connect (){

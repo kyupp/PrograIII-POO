@@ -20,6 +20,7 @@ public class Match {
     private Player owner;
     private int actualTurn;
     private Map<Player, List<String>> logs;
+    private Player winner;
 
     public Match(Player owner) {
         this.players = new ArrayList<>();
@@ -40,6 +41,10 @@ public class Match {
     public void nextTurn(){
         this.actualTurn = (this.actualTurn + 1)%players.size();
     }
+
+    public Player getOwner() {
+        return owner;
+    }
     
     public void log(Player player, String text) {
         logs.get(player).add(LocalDateTime.now() + " - " + text);
@@ -48,5 +53,23 @@ public class Match {
     public List<Player> getPlayers() {
         return players;
     }
+    
+    public Player getPlayer(String ID){
+        for (Player player : this.players){
+            if (player.equals(ID)){
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+    
     
 }

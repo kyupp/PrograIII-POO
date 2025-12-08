@@ -1,6 +1,7 @@
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\com\mycompany\proyectoiii\ProyectoIII.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\com\mycompany\proyectoiii\Start.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\Command.java
+C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandApproveJoin.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandAttack.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandFactory.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandGiveup.java
@@ -10,6 +11,7 @@ C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\Proyec
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandPassTurn.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandPrivateMessage.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandReady.java
+C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandReadyRequest.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandReload.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandSelectPlayer.java
 C:\Users\mathi\OneDrive\Escritorio\TEC\Segundo Semestre\POO\PrograIII-POO\ProyectoIII\src\main\java\Console\CommandType.java
