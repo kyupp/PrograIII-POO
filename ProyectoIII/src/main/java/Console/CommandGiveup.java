@@ -13,7 +13,7 @@ import GUI.Server.ThreadServidor;
 public class CommandGiveup  extends Command{
 
     public CommandGiveup(String[] args) {
-        super(CommandType.PRIVATE_MESSAGE, args);
+        super(CommandType.GIVEUP, args);
     }
 
     @Override
