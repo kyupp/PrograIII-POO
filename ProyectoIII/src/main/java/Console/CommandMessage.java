@@ -5,48 +5,77 @@
 package Console;
 
 import GUI.Client.Client;
+import GUI.Server.Server;
 import GUI.Server.ThreadServidor;
+import java.util.Arrays;
 
 /**
  *
  * @author diego
  */
-public class CommandMessage extends Command{
+public class CommandMessage extends Command {
 
+    /**
+     * args:
+     * 0 = "MESSAGE"
+     * 1 = mensaje...
+     * n-1 = "true" / "false"  (broadcast)
+     */
     public CommandMessage(String[] args) {
-        // args: [0] = "MESSAGE", args[1..n-2] = texto, args[n-1] = broadcast
-        super(CommandType.MESSAGE, new String[]{ extractText(args) });
+        super(
+            CommandType.MESSAGE,
+            buildParameters(args)
+        );
 
-        // Convertir último argumento a boolean
         boolean broadcast = Boolean.parseBoolean(args[args.length - 1]);
         this.setIsBroadcast(broadcast);
     }
 
-    /** 
-     * Reconstruye el texto tomando todo entre args[1] y args[n-2]
+    /**
+     * parameters = [senderName, messageText]
+     *
+     * Esto es CRUCIAL porque el SERVER usa:
+     * parameters[1] para buscar el destino en mensajes privados.
      */
-    private static String extractText(String[] args) {
-        if (args.length < 3) { 
-            return ""; 
-        }
+    private static String[] buildParameters(String[] args) {
 
+        // Seguridad: mínimo → MESSAGE mensaje broadcast
+        if (args.length < 3)
+            return new String[]{"", ""};
+
+        // Reconstruir texto desde args[1] hasta args[n-2]
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < args.length - 1; i++) {
             sb.append(args[i]).append(" ");
         }
-        return sb.toString().trim();
+        String texto = sb.toString().trim();
+
+        // IMPORTANTE:
+        // el parámetro 0 lo pone el client en processInClient
+        // aquí sólo dejamos espacio
+        return new String[]{"", texto};
     }
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        threadServidor.getServer().getRefFrame()
-            .writeMessage("[MSG] " + getParameters()[0] + " | Broadcast=" + isIsBroadcast());
+
+        // AQUI colocamos EL REMITENTE
+        getParameters()[0] = threadServidor.getClientName();
+
+        threadServidor.getServer().getRefFrame().writeMessage(
+            "[MSG] " + getParameters()[0] + ": " + getParameters()[1]
+        );
     }
-    
+
     @Override
     public void processInClient(Client client) {
-        //Message "string"
-        client.getRefFrame().writeMessage("Mensaje recibido: " + this.getParameters()[0]);
+
+        // Cuando lo recibe el cliente, solo imprime:
+        String sender = getParameters()[0];
+        String msg = getParameters()[1];
+
+        client.getRefFrame().writeMessage(sender + ": " + msg);
     }
-    
 }
+
+

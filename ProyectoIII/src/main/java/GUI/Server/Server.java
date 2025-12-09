@@ -62,7 +62,7 @@ public class Server {
         return null;
     }
     
-    void executeCommand(Command comando) {
+    public void executeCommand(Command comando) {
         if (comando.isIsBroadcast())
             this.broadcast(comando);
         else
@@ -80,14 +80,13 @@ public class Server {
     }
     
     public void sendPrivate(Command comando){
-        // Nombre del cliente en la posición 1
-        if (comando.getParameters().length <= 1)
+        if (comando.getParameters() == null || comando.getParameters().length <= 1)
             return;
-        
-        String searchName = comando.getParameters()[1];
-        
+
+        String searchName = comando.getParameters()[1]; // ahora está garantizado por el contrato
+
         for (ThreadServidor client : connectedClients) {
-            if (client.name.equals(searchName)){
+            if (client.getClientName() != null && client.getClientName().equals(searchName)) {
                 try {
                     client.objectSender.writeObject(comando);
                     break;
@@ -97,6 +96,7 @@ public class Server {
             }
         }
     }
+
     // GETTERS
     
     public int getMaxConections() {

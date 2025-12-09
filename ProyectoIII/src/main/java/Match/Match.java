@@ -4,12 +4,15 @@
  */
 package Match;
 
+import Console.Command;
+import Console.CommandMessage;
 import Player.Player;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  *
@@ -18,7 +21,7 @@ import java.util.Map;
 public class Match {
     private List<Player> players;
     private Player owner;
-    private int actualTurn;
+    private int actualTurn = -1;
     private Map<Player, List<String>> logs;
     private Player winner;
 
@@ -27,6 +30,10 @@ public class Match {
         this.players.add(owner);
         this.owner = owner;
         this.logs = new HashMap<>();
+    }
+
+    public int getActualTurn() {
+        return actualTurn;
     }
     
     public void addPlayer(Player player){
@@ -52,6 +59,19 @@ public class Match {
 
     public List<Player> getPlayers() {
         return players;
+    }
+    
+    public Command startGame(){
+        Random rand = new Random();
+        actualTurn = rand.nextInt(players.size());
+        
+        String actualPlayer = players.get(actualTurn).getId();
+        
+        String[] message = {"MESSAGE", "Turno del jugador: " + actualPlayer, "true"};
+        
+        System.out.println("PARTIDA INICIADA");
+        
+        return new CommandMessage(message);    
     }
     
     public Player getPlayer(String ID){

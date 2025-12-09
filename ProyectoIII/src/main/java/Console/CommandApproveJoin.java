@@ -46,6 +46,12 @@ public class CommandApproveJoin extends Command {
             CommandMessage msg = new CommandMessage(
                 new String[]{"MESSAGE", "Fuiste aceptado en la partida!", "false"}
             );
+            
+            if (match.getPlayers().size() == server.getConnectedClients().size()){
+                
+                hostThread.getServer().executeCommand(match.startGame());
+            }
+            
             try {
                 requestThread.objectSender.writeObject(msg);
             } catch (IOException ex) {

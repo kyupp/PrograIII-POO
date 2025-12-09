@@ -56,6 +56,11 @@ public class CommandReady extends Command {
             }
 
         } else {
+            
+            if (threadServidor.getServer().getGame().getActualTurn() > 0){
+                sendResponse(threadServidor, "ERROR: El juego ya ha inicado");
+                return;
+            }
 
             // Ya existe partida → enviar solicitud al host
             Match match = server.getGame();
