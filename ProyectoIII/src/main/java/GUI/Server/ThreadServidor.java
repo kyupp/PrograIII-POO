@@ -39,7 +39,8 @@ public class ThreadServidor extends Thread{
             objectSender = new ObjectOutputStream(socket.getOutputStream());
             objectSender.flush();
             objectListener = new ObjectInputStream(socket.getInputStream());
-            System.out.println(name + "     AHAHAHAHAH");
+            //System.out.println(name + "     AHAHAHAHAH");
+            this.gamePlayer = new Player("");
         } catch (IOException ex) {
             System.out.println("Error en ThreadServidor constructor: " + ex.getMessage());
         } catch (Exception ex){
@@ -92,6 +93,12 @@ public class ThreadServidor extends Thread{
     public void setClientName(String name) {
         this.name = name;
         this.setName("ClientThread-" + name); // Renombra el hilo en el sistema
+        setPlayer();
+    }
+    
+    public void setPlayer(){
+        this.gamePlayer.setId(this.name);
+        System.out.println("Player inicializado.        " + this.gamePlayer.getId());
     }
     
     public String getClientName(){
@@ -161,11 +168,5 @@ public class ThreadServidor extends Thread{
         } catch (Exception e) {
             System.out.println("Error enviando confirmación: " + e.getMessage());
         }
-    }
-
-    public void setGamePlayer(Player gamePlayer) {
-        this.gamePlayer = gamePlayer;
-    }
-    
-    
+    } 
 }

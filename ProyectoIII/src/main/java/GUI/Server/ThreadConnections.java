@@ -29,7 +29,7 @@ public class ThreadConnections extends Thread{
                 System.out.println("tc1");
                 newSocket = server.getServerSocket().accept();
                 System.out.println("tc2");
-//una vez con socket recibido, se crea e inicia el thread que va a anteder y escuchar al clinete que los conectó
+                //una vez con socket recibido, se crea e inicia el thread que va a anteder y escuchar al clinete que los conectó
                 ThreadServidor newServerThread = new ThreadServidor(server, newSocket);
                 System.out.println("tc3");
                 server.getConnectedClients().add (newServerThread);

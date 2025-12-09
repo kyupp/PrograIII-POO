@@ -35,6 +35,10 @@ public class Player {
         team.add(fighter); 
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }

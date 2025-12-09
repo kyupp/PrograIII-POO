@@ -28,12 +28,15 @@ public class CommandReady extends Command {
         Server server = threadServidor.getServer();
         //System.out.println(threadServidor.name + "SISISISI");
         
+        if(threadServidor.getGamePlayer().getTeam() == null || threadServidor.getGamePlayer().getTeam().size() < 4){
+            sendResponse(threadServidor, "ERROR: Debe crear sus fighters primero.");
+            return;
+        }
+        
         if (threadServidor.getGamePlayer() != null){
             sendResponse(threadServidor, "ERROR: Ya le dio a Ready");
             return;
         }
-        
-        threadServidor.setGamePlayer(new Player (threadServidor.name));
 
         // Si no existe partida → este jugador es el host
         if (server.getGame() == null) {
