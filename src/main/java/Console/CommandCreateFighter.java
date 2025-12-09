@@ -65,7 +65,7 @@ public class CommandCreateFighter extends Command {
         player.addFighter(newFighter);
         
         sendResponse(threadServidor, 
-            String.format("✓ Guerrero '%s' creado exitosamente [%s]. Armas: 5/5 generadas", 
+            String.format(" Guerrero '%s' creado exitosamente [%s]. Armas: 5/5 generadas", 
                 fighterName, fighterType));
         
         // Mostrar info del guerrero
