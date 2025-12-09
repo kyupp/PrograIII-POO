@@ -31,7 +31,7 @@ public class ClientFrame extends javax.swing.JFrame {
         initComponents();
         name = JOptionPane.showInputDialog(this, "Ingrese su nombre: ");
         if (name == null || name.trim().isEmpty()) {
-            name = "Civilization_" + System.currentTimeMillis();
+            name = "ID_" + System.currentTimeMillis();
         }
         client = new Client(this, name);
         

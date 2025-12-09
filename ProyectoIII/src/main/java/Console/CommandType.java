@@ -21,6 +21,7 @@ public enum CommandType {
     SELECT_PLAYER (2),
     RELOAD (1),
     APPROVE_JOIN(5),
+    CREATE_FIGHTER (3),
     READY_REQUEST(6);
 
     //.. AGREGARÍAN MÁS TIPOS DE COMANDO

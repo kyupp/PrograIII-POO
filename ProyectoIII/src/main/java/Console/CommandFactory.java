@@ -39,6 +39,8 @@ public class CommandFactory {
                 return new CommandMutualExit(args);
             case "APPROVE_JOIN":
                 return new CommandApproveJoin(args);
+            case "CREATE_FIGHTER":
+                return new CommandCreateFighter(args);
             default:
                 return null;
         }
