@@ -39,7 +39,6 @@ public class ThreadServidor extends Thread{
             objectSender = new ObjectOutputStream(socket.getOutputStream());
             objectSender.flush();
             objectListener = new ObjectInputStream(socket.getInputStream());
-            System.out.println(name + "     AHAHAHAHAH");
         } catch (IOException ex) {
             System.out.println("Error en ThreadServidor constructor: " + ex.getMessage());
         } catch (Exception ex){
