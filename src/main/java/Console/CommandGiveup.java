@@ -5,6 +5,7 @@
 package Console;
 
 import GUI.Server.ThreadServidor;
+import Player.Player;
 
 /**
  *
@@ -18,12 +19,30 @@ public class CommandGiveup  extends Command{
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        this.setIsBroadcast(true);
+        Player player = threadServidor.getGamePlayer();
+        if (player == null) {
+            threadServidor.sendError("No estás en una partida.");
+            return;
+        }
+
+        // Marcar al jugador como inactivo y registrar la rendición
+        player.surrender();
         threadServidor.isActive = false;
+
+        // Enviar confirmación privada al jugador que se rinde
+        threadServidor.sendPrivateMessage("Te has rendido. Ya no puedes participar en la partida.");
+
+        // Crear y enviar un mensaje de broadcast para notificar a todos
+        String broadcastMsg = "El jugador " + player.getId() + " se ha rendido.";
+        CommandMessage broadcastCmd = new CommandMessage(new String[]{"MESSAGE", broadcastMsg, "true"});
+        threadServidor.getServer().broadcast(broadcastCmd);
+
+        // Si el turno era del jugador que se rindió, pasar al siguiente
+        if (threadServidor.getServer().getGame().isMyTurn(player)) {
+            threadServidor.getServer().getGame().nextTurn();
+            String turnMsg = "Turno de: " + threadServidor.getServer().getGame().getPlayerInTurn().getId();
+            CommandMessage turnCmd = new CommandMessage(new String[]{"MESSAGE", turnMsg, "true"});
+            threadServidor.getServer().broadcast(turnCmd);
+        }
     }
-    
-//    @Override
-//    public void processInClient(Client client) {
-//        System.out.println("Procesando un attack");
-//    }
 }

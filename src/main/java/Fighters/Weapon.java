@@ -39,6 +39,10 @@ public class Weapon {
         used = true;
     }
 
+    public void unSetUsed() {
+        used = false;
+    }
+
     public String getName() {
         return name;
     }
