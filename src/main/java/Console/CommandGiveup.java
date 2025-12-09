@@ -5,7 +5,6 @@
 package Console;
 
 import GUI.Server.ThreadServidor;
-import Player.Player;
 
 /**
  *
@@ -19,30 +18,27 @@ public class CommandGiveup  extends Command{
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        Player player = threadServidor.getGamePlayer();
-        if (player == null) {
-            threadServidor.sendError("No estás en una partida.");
-            return;
-        }
-
-        // Marcar al jugador como inactivo y registrar la rendición
-        player.surrender();
+        this.setIsBroadcast(true);
         threadServidor.isActive = false;
-
-        // Enviar confirmación privada al jugador que se rinde
-        threadServidor.sendPrivateMessage("Te has rendido. Ya no puedes participar en la partida.");
-
-        // Crear y enviar un mensaje de broadcast para notificar a todos
-        String broadcastMsg = "El jugador " + player.getId() + " se ha rendido.";
-        CommandMessage broadcastCmd = new CommandMessage(new String[]{"MESSAGE", broadcastMsg, "true"});
-        threadServidor.getServer().broadcast(broadcastCmd);
-
-        // Si el turno era del jugador que se rindió, pasar al siguiente
-        if (threadServidor.getServer().getGame().isMyTurn(player)) {
-            threadServidor.getServer().getGame().nextTurn();
-            String turnMsg = "Turno de: " + threadServidor.getServer().getGame().getPlayerInTurn().getId();
-            CommandMessage turnCmd = new CommandMessage(new String[]{"MESSAGE", turnMsg, "true"});
-            threadServidor.getServer().broadcast(turnCmd);
+        sendResponse(threadServidor, "Usted ha decidido retirarse :<");
+        
+        CommandMessage msg = new CommandMessage(
+                new String[]{"MESSAGE", "El usuario: " + threadServidor.name + " ha decidio retirarse", "true"}
+        );
+        
+        threadServidor.getServer().broadcast(msg);
+    }
+    
+    private void sendResponse(ThreadServidor thread, String message) {
+        try {
+            thread.sendPrivateMessage(message);
+        } catch (Exception e) {
+            System.out.println("Error enviando respuesta: " + e.getMessage());
         }
     }
+    
+//    @Override
+//    public void processInClient(Client client) {
+//        System.out.println("Procesando un attack");
+//    }
 }
