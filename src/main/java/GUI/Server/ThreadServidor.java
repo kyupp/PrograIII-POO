@@ -57,11 +57,7 @@ public class ThreadServidor extends Thread{
             try {
                 comando = (Command) objectListener.readObject();
                 server.refFrame.writeMessage("ThreadServer recibió: " + comando);
-                comando.processForServer(this);
-                
-                if (isActive) {
-                    server.executeCommand(comando);
-                }
+                comando.processForServer(this); // The command itself will handle any necessary broadcasting or responses.
                 
             } catch (IOException ex) {
                 System.out.println("Error IO en ThreadServidor run: " + ex.getMessage());
@@ -130,9 +126,13 @@ public class ThreadServidor extends Thread{
      * Envía un mensaje de error al cliente
      */
     public void sendError(String errorMessage) {
+        String[] args = {"MESSAGE", "ERROR: " + errorMessage, "false"};
+        CommandMessage errorCmd = new CommandMessage(args);
         try {
             server.refFrame.writeMessage("ERROR para " + name + ": " + errorMessage);
-            // Aquí podrías enviar un comando de error al cliente si implementas uno
+            // Enviar el comando de mensaje de error al cliente
+            objectSender.writeObject(errorCmd);
+            objectSender.flush();
         } catch (Exception e) {
             System.out.println("Error enviando mensaje de error: " + e.getMessage());
         }
@@ -155,9 +155,13 @@ public class ThreadServidor extends Thread{
      * Envía un mensaje de confirmación al cliente
      */
     public void sendConfirmation(String message) {
+        String[] args = {"MESSAGE", message, "false"};
+        CommandMessage infoCmd = new CommandMessage(args);
         try {
             server.refFrame.writeMessage("INFO para " + name + ": " + message);
-            // TODO: enviar un comando de confirmación al cliente
+            // Enviar el comando de mensaje de confirmación al cliente
+            objectSender.writeObject(infoCmd);
+            objectSender.flush();
         } catch (Exception e) {
             System.out.println("Error enviando confirmación: " + e.getMessage());
         }

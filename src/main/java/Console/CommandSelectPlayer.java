@@ -4,6 +4,7 @@
  */
 package Console;
 
+import GUI.Client.Client;
 import GUI.Server.ThreadServidor;
 
 /**
@@ -72,5 +73,10 @@ public class CommandSelectPlayer extends Command {
             System.out.println("Error enviando respuesta: " + e.getMessage());
         }
     }
-    
+
+    @Override
+    public void processInClient(Client client) {
+        // This command's response is already formatted as a message by the server,
+        // so the default CommandMessage.processInClient will handle displaying it.
+    }
 }

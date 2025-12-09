@@ -4,6 +4,7 @@
 package com.mycompany.proyectoiii;
 
 import GUI.Server.Server;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,13 +13,28 @@ import GUI.Server.Server;
 public class ProyectoIII {
 
     public static void main(String[] args) {
-        if (args.length > 0 && "--server".equals(args[0])) {
-            // Iniciar en modo servidor sin GUI
-            System.out.println("Iniciando servidor...");
-            new Server(); // Asume que el constructor de Server inicia el servidor.
-        } else {
-            // Iniciar en modo cliente con GUI (comportamiento actual)
-            Start.Start();
+        // Opciones para el diálogo de selección
+        Object[] options = {"Server + 1 Client", "Client Only", "Server Only (Consola)"};
+        int choice = JOptionPane.showOptionDialog(null,
+                "¿Qué te gustaría iniciar?",
+                "Selector de Inicio - Proyecto III",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+
+        switch (choice) {
+            case 0: // "Server + 1 Client"
+                Start.Start();
+                break;
+            case 1: // "Client Only"
+                Start.startClient();
+                break;
+            case 2: // "Server Only (Consola)"
+                System.out.println("Iniciando servidor en modo consola...");
+                new Server();
+                break;
         }
     }
 }

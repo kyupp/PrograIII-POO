@@ -7,6 +7,7 @@ package Console;
 import GUI.Client.Client;
 import GUI.Server.ThreadServidor;
 import GUI.Server.Server;
+import javax.swing.SwingUtilities;
 import java.io.IOException;
 
 public class CommandPrivateMessage extends Command {
@@ -60,27 +61,9 @@ public class CommandPrivateMessage extends Command {
             "[PRIVATE] De " + remitente + " para " + destinatario + ": " + texto
         );
 
-        // buscar hilo del destinatario y enviar
-        ThreadServidor target = server.buscarThreadServidor(destinatario);
-        if (target != null) {
-            try {
-                target.objectSender.writeObject(this);
-            } catch (IOException ex) {
-                server.getRefFrame().writeMessage("Error enviando privado: " + ex.getMessage());
-            }
-        } else {
-            // si no existe, avisar al remitente
-            try {
-                CommandMessage aviso = new CommandMessage(new String[] {
-                    "MESSAGE",
-                    "El usuario '" + destinatario + "' no está conectado.",
-                    "false"
-                });
-                threadServidor.objectSender.writeObject(aviso);
-            } catch (IOException ex) {
-                server.getRefFrame().writeMessage("Error avisando al remitente: " + ex.getMessage());
-            }
-        }
+        // Since ThreadServidor no longer calls executeCommand, we handle sending here.
+        // The server's sendPrivate method will find the target and send 'this' command.
+        server.sendPrivate(this);
     }
 
     @Override
@@ -89,6 +72,8 @@ public class CommandPrivateMessage extends Command {
         String remitente = getParameters().length > 0 ? getParameters()[0] : "";
         String texto = getParameters().length > 2 ? getParameters()[2] : "";
 
-        client.getRefFrame().writeMessage("[Privado] " + remitente + ": " + texto);
+        SwingUtilities.invokeLater(() -> {
+            client.getRefFrame().appendLog("[Privado] " + remitente + ": " + texto);
+        });
     }
 }

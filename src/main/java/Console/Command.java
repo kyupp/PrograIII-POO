@@ -6,6 +6,7 @@ package Console;
 
 import GUI.Client.Client;
 import GUI.Server.ThreadServidor;
+import javax.swing.SwingUtilities;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -25,7 +26,13 @@ public abstract class Command implements Serializable{
     
     public abstract void processForServer(ThreadServidor threadServidor);
     public void processInClient(Client client){
-        client.getRefFrame().writeMessage(this.toString());
+        SwingUtilities.invokeLater(() -> {
+            // Por defecto, todos los comandos que llegan al cliente se loguean.
+            // Las subclases pueden llamar a super.processInClient() y luego añadir su lógica de UI.
+            if (!(this instanceof CommandMessage) && !(this instanceof CommandAttack)) { // CommandMessage y CommandAttack tienen su propio formato de log.
+                client.getRefFrame().appendLog("SYS: " + this.toString());
+            }
+        });
     }
 
     public CommandType getType() {

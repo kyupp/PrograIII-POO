@@ -27,12 +27,9 @@ public class modelClient {
     public String comprobarComando(String comandoIngresado) {
         if (comandoIngresado.length() > 0) {
             String args[] = CommandUtil.tokenizerArgs(comandoIngresado);
-            if (args.length > 0) {
-                switch (args[0].toUpperCase()) {
-                    default:
-                        Command comando = CommandFactory.getCommand(args);
-                        return enviarComandoServer(comando);
-                }
+            if (args.length > 0) { // Ensure there is a command
+                Command comando = CommandFactory.getCommand(args);
+                return enviarComandoServer(comando); // This will return an empty string on success
             }
         }
         return "";

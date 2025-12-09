@@ -4,19 +4,16 @@
  */
 package Console;
 
-import Fighters.Fighter;
-import Fighters.Type;
-import Fighters.Weapon;
+import GUI.Client.Client;
 import GUI.Server.Server;
 import GUI.Server.ThreadServidor;
 import Match.Match;
 import Player.Player;
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  *
- * @author mathi & David
+ * @author mathi
  */
 public class CommandReady extends Command {
 
@@ -29,71 +26,41 @@ public class CommandReady extends Command {
     public void processForServer(ThreadServidor threadServidor) {
 
         Server server = threadServidor.getServer();
+        Player player = threadServidor.getGamePlayer();
+        Match match = server.getGame();
 
-        // Validación original de tu compañero
-        if (threadServidor.getGamePlayer() != null){
-            sendResponse(threadServidor, "ERROR: Ya le dio a Ready");
+        if (player == null) {
+            sendResponse(threadServidor, "ERROR: Debes crear al menos un guerrero para unirte a una partida (ej: CREATE_FIGHTER <nombre> <tipo>)");
             return;
         }
 
-        // 1. Crear el Jugador Básico (Lógica original)
-        Player newPlayer = new Player(threadServidor.name);
+        if (player.getTeam().size() < 4) {
+            sendResponse(threadServidor, "ERROR: Debes tener 4 guerreros en tu equipo para poder estar listo. Tienes " + player.getTeam().size() + ".");
+            return;
+        }
 
-        // 2. Asociar el jugador (con equipo) al hilo
-        threadServidor.setGamePlayer(newPlayer);
-        threadServidor.sendConfirmation("Ahora estás registrado en la partida. " +
-                "Crea tus guerreros con: CREATE_FIGHTER <nombre> <tipo>");
-
-
-        // 3. Lógica de Host vs Invitado (Lógica original de tu compañero)
-        if (server.getGame() == null) {
-
-            // --- CASO 1: NO EXISTE PARTIDA (JUGADOR ES HOST) ---
-            Match match = new Match(threadServidor.getGamePlayer());
-            server.setGame(match);
-
-            // Avisar al host
-            CommandMessage msgHost = new CommandMessage(
-                    new String[]{"MESSAGE",
-                            "Eres el HOST. Esperando solicitudes de jugadores...",
-                            "false"}
-            );
-
-            try {
-                threadServidor.objectSender.writeObject(msgHost);
-            } catch (IOException ex) {
-                System.out.println("Error enviando mensaje al host");
+        if (player.isReady()) {
+            sendResponse(threadServidor, "Ya estás marcado como listo.");
+            return;
+        }
+        
+        player.setReady(true);
+        sendResponse(threadServidor, "¡Estás listo! Esperando a los demás jugadores...");
+        
+        // Notificar a todos
+        server.broadcast(new CommandMessage(new String[]{"MESSAGE", "El jugador " + player.getId() + " está listo.", "true"}));
+        
+        // Verificar si todos los jugadores están listos para empezar
+        boolean allReady = true;
+        for (Player p : match.getPlayers()) {
+            if (!p.isReady()) {
+                allReady = false;
+                break;
             }
-
-        } else {
-
-            // --- CASO 2: YA EXISTE PARTIDA (JUGADOR ES INVITADO) ---
-            Match match = server.getGame();
-
-            // Nueva validación: No permitir unirse si la partida ya empezó.
-            if (match.isGameStarted()) {
-                sendResponse(threadServidor, "ERROR: La partida ya ha comenzado.");
-                threadServidor.setGamePlayer(null); // Revertir la asignación del jugador
-                return;
-            }
-
-            Player host = match.getOwner();
-            ThreadServidor hostThread = server.buscarThreadServidor(host.getId());
-
-            if (hostThread != null) {
-                // Enviar solicitud de permiso al Host
-                CommandReadyRequest request = new CommandReadyRequest(
-                    threadServidor.getClientName()
-                );
-                try {
-                    hostThread.objectSender.writeObject(request); // El Host recibe: "¿Puedo entrar?"
-                    threadServidor.sendConfirmation("Solicitud enviada al Host. Espera aprobación.");
-                } catch (IOException ex) {
-                    threadServidor.sendError("No se pudo enviar la solicitud al Host.");
-                }
-            } else {
-                threadServidor.sendError("El Host parece haberse desconectado.");
-            }
+        }
+        
+        if (match.getPlayers().size() >= 2 && allReady) {
+            server.broadcast(match.startGame());
         }
     }
 
@@ -103,5 +70,10 @@ public class CommandReady extends Command {
         } catch (Exception e) {
             System.out.println("Error enviando respuesta: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void processInClient(Client client) {
+        // The server sends CommandMessage for feedback, so this can be empty.
     }
 }

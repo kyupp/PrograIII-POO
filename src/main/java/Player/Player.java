@@ -15,6 +15,7 @@ import java.util.List;
 public class Player {
     private String id;
     private List<Fighter> team;
+    private boolean isReady = false;
 
     // Scores
     private boolean isAlive = true;
@@ -36,6 +37,18 @@ public class Player {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
     }
 
     public List<Fighter> getTeam() {

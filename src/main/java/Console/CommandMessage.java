@@ -6,6 +6,7 @@ package Console;
 
 import GUI.Client.Client;
 import GUI.Server.ThreadServidor;
+import javax.swing.SwingUtilities;
 import java.util.Arrays;
 
 /**
@@ -64,15 +65,29 @@ public class CommandMessage extends Command {
         threadServidor.getServer().getRefFrame().writeMessage(
             "[MSG] " + getParameters()[0] + ": " + getParameters()[1]
         );
+
+        // Since ThreadServidor no longer calls executeCommand, we do it here.
+        if (isIsBroadcast()) {
+            threadServidor.getServer().broadcast(this);
+        }
     }
 
     @Override
     public void processInClient(Client client) {
 
         // Cuando lo recibe el cliente, solo imprime:
-        String sender = getParameters()[0];
-        String msg = getParameters()[1];
+        String sender = (getParameters().length > 0) ? getParameters()[0] : "Servidor";
+        String msg = (getParameters().length > 1) ? getParameters()[1] : "";
 
-        client.getRefFrame().writeMessage(sender + ": " + msg);
+        final String finalMsg;
+        if (sender == null || sender.isEmpty() || sender.equalsIgnoreCase("Servidor")) {
+            finalMsg = msg; // Mensajes del sistema (errores, confirmaciones)
+        } else {
+            finalMsg = sender + ": " + msg; // Mensajes de otros jugadores
+        }
+
+        SwingUtilities.invokeLater(() -> {
+            client.getRefFrame().appendLog(finalMsg);
+        });
     }
 }

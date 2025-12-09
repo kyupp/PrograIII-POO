@@ -4,8 +4,11 @@
  */
 package Console;
 
+import GUI.Client.Client;
+import GUI.Server.Server;
 import GUI.Server.ThreadServidor;
 import Player.Player;
+import java.io.IOException;
 
 /**
  *
@@ -20,29 +23,32 @@ public class CommandGiveup  extends Command{
     @Override
     public void processForServer(ThreadServidor threadServidor) {
         Player player = threadServidor.getGamePlayer();
-        if (player == null) {
-            threadServidor.sendError("No estás en una partida.");
-            return;
+        if (player != null) {
+            player.surrender();
+            threadServidor.isActive = false;
+            sendResponse(threadServidor, "Te has rendido. Ya no participas en la partida.");
+
+            CommandMessage msg = new CommandMessage(
+                    new String[]{"MESSAGE", "El jugador: " + threadServidor.getClientName() + " se ha rendido.", "true"}
+            );
+
+            threadServidor.getServer().broadcast(msg);
+        } else {
+            sendResponse(threadServidor, "ERROR: No estás en una partida para poder rendirte.");
         }
+    }
 
-        // Marcar al jugador como inactivo y registrar la rendición
-        player.surrender();
-        threadServidor.isActive = false;
-
-        // Enviar confirmación privada al jugador que se rinde
-        threadServidor.sendPrivateMessage("Te has rendido. Ya no puedes participar en la partida.");
-
-        // Crear y enviar un mensaje de broadcast para notificar a todos
-        String broadcastMsg = "El jugador " + player.getId() + " se ha rendido.";
-        CommandMessage broadcastCmd = new CommandMessage(new String[]{"MESSAGE", broadcastMsg, "true"});
-        threadServidor.getServer().broadcast(broadcastCmd);
-
-        // Si el turno era del jugador que se rindió, pasar al siguiente
-        if (threadServidor.getServer().getGame().isMyTurn(player)) {
-            threadServidor.getServer().getGame().nextTurn();
-            String turnMsg = "Turno de: " + threadServidor.getServer().getGame().getPlayerInTurn().getId();
-            CommandMessage turnCmd = new CommandMessage(new String[]{"MESSAGE", turnMsg, "true"});
-            threadServidor.getServer().broadcast(turnCmd);
+    private void sendResponse(ThreadServidor thread, String message) {
+        try {
+            thread.sendPrivateMessage(message);
+        } catch (Exception e) {
+            System.out.println("Error enviando respuesta: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void processInClient(Client client) {
+        // The server sends CommandMessage for feedback, so this method
+        // can rely on the default behavior of logging if needed, or do nothing.
     }
 }

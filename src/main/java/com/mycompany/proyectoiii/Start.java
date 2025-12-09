@@ -13,18 +13,23 @@ import GUI.Server.FrameServer;
  */
 public class Start {
     public static void Start(){
-        
+        startServer();
+        startClient();
+    }
+
+    public static void startServer() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrameServer().setVisible(true);
             }
         });
-        
+    }
+
+    public static void startClient() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ClientFrame().setVisible(true);
             }
         });
-        
     }
 }

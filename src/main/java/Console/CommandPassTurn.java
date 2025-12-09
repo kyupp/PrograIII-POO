@@ -4,9 +4,9 @@
  */
 package Console;
 
+import GUI.Client.Client;
 import GUI.Server.ThreadServidor;
 import Match.Match;
-import Player.Player;
 
 /**
  *
@@ -21,24 +21,32 @@ public class CommandPassTurn extends Command {
     @Override
     public void processForServer(ThreadServidor threadServidor) {
         Match game = threadServidor.getServer().getGame();
-        Player sender = threadServidor.getGamePlayer();
-
-        if (game != null && sender != null) {
-            // Validar que sea su turno antes de pasarlo
-            if (game.isMyTurn(sender)) {
+        if (game != null){
+            if (game.isMyTurn(threadServidor.getGamePlayer())) {
                 game.nextTurn();
-                Player nextPlayer = game.getPlayerInTurn();
-
-                // Avisar a todos del cambio de turno
-                String msg = "Turno pasado. Ahora es el turno de: " + nextPlayer.getId();
-                CommandMessage cmd = new CommandMessage(new String[]{"MESSAGE", msg, "true"});
-                threadServidor.getServer().executeCommand(cmd);
+                sendResponse(threadServidor, "Has pasado tu turno.");
+                // Notificar a todos de quién es el siguiente turno
+                CommandMessage turnMsg = new CommandMessage(new String[]{"MESSAGE", "Turno de: " + game.getPlayerInTurn().getId(), "true"});
+                threadServidor.getServer().broadcast(turnMsg);
             } else {
-                threadServidor.sendError("No puedes pasar turno, no es tu turno.");
+                sendResponse(threadServidor, "ERROR: No es tu turno.");
             }
-        } else {
-            threadServidor.sendError("Error: No hay juego iniciado o no estás registrado.");
+        } else{
+            sendResponse(threadServidor, "ERROR: Aun no ha iniciado el juego");
         }
     }
-    
+
+    private void sendResponse(ThreadServidor thread, String message) {
+        try {
+            thread.sendPrivateMessage(message);
+        } catch (Exception e) {
+            System.out.println("Error enviando respuesta: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void processInClient(Client client) {
+        // The server sends CommandMessage for feedback, so this can be empty.
+    }
+
 }

@@ -1,6 +1,7 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ *
  */
 package Console;
 
@@ -9,6 +10,7 @@ import Fighters.Weapon;
 import GUI.Server.ThreadServidor;
 import Match.Match;
 import Player.Player;
+import GUI.Client.Client;
 
 /**
  *
@@ -112,9 +114,23 @@ public class CommandAttack extends Command {
                 // Aquí podrías sumar puntos de muerte al player
             }
 
-            // 6. Broadcast del resultado como mensaje global
-            CommandMessage broadcastCmd = new CommandMessage(new String[]{"MESSAGE", resultMsg, "true"});
-            threadServidor.getServer().executeCommand(broadcastCmd);
+            // 6. Enviar CommandAttack con todos los detalles a los clientes relevantes para actualización de UI
+            // Parameters: [attackerPlayerName, targetPlayerName, attackingFighterName, weaponName, victimFighterName, damage, victimFighterNewHP]
+            String[] clientParams = {
+                attacker.getId(), victim.getId(), attackingFighter.getName(),
+                weapon.getName(), victimFighter.getName(),
+                String.valueOf(damage), String.valueOf(victimFighter.getLife())
+            };
+            CommandAttack clientAttackCmd = new CommandAttack(clientParams);
+
+            // Enviar al atacante
+            threadServidor.objectSender.writeObject(clientAttackCmd);
+            threadServidor.objectSender.flush();
+
+            // Enviar a la víctima
+            ThreadServidor victimThread = threadServidor.getServer().buscarThreadServidor(victim.getId());
+            victimThread.objectSender.writeObject(clientAttackCmd);
+            victimThread.objectSender.flush();
 
             // 7. Pasar turno automáticamente (opcional, depende de reglas)
             match.nextTurn();
@@ -126,6 +142,44 @@ public class CommandAttack extends Command {
         } catch (Exception e) {
             threadServidor.sendError("Error procesando ataque: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void processInClient(Client client) {
+        String[] params = getParameters();
+        // Expected parameters: [attackerPlayerName, targetPlayerName, attackingFighterName, weaponName, victimFighterName, damage, victimFighterNewHP]
+        if (params.length < 7) {
+            client.getRefFrame().appendLog("ERROR: Formato de ATTACK inválido recibido del servidor.");
+            return;
+        }
+
+        // Parse parameters for UI update
+        String attackerPlayerName = params[0];
+        String targetPlayerName = params[1];
+        String attackingFighterName = params[2];
+        String weaponName = params[3];
+        String victimFighterName = params[4];
+        int damage = Integer.parseInt(params[5]);
+        int victimFighterNewHP = Integer.parseInt(params[6]);
+
+        // Update UI based on who is attacking/being attacked
+        if (client.getName().equals(attackerPlayerName)) {
+            // This client is the attacker
+            client.getRefFrame().displayOutgoingAttack(
+                    attackingFighterName, weaponName, targetPlayerName, victimFighterName, damage);
+            // Update target's fighter health if it's the enemy currently displayed
+            client.getRefFrame().updateEnemyFighterDisplay(victimFighterName, victimFighterNewHP);
+        } else if (client.getName().equals(targetPlayerName)) {
+            // This client is the victim
+            client.getRefFrame().displayIncomingAttack(
+                    attackerPlayerName, attackingFighterName, weaponName, victimFighterName, damage);
+            // Update my fighter's health
+            client.getRefFrame().updateMyFighterCard(victimFighterName, victimFighterNewHP);
+        } else {
+            // Neither attacker nor victim, just log the event
+            client.getRefFrame().appendLog(String.format("INFO: %s (%s) atacó a %s (%s) con %s, causando %d%% de daño.",
+                    attackerPlayerName, attackingFighterName, targetPlayerName, victimFighterName, weaponName, damage));
         }
     }
 }

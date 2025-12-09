@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Match;
 
 import Console.Command;
@@ -45,9 +41,13 @@ public class Match {
         return players.get(this.actualTurn);
     }
 
+    public int getActualTurn() {
+        return actualTurn;
+    }
+
     public void nextTurn(){
         if (players.isEmpty()) return;
-        
+
         // Avanza al siguiente jugador, saltando a los que ya no están vivos/activos.
         do {
             this.actualTurn = (this.actualTurn + 1) % players.size();
@@ -81,7 +81,7 @@ public class Match {
     public boolean isMyTurn(Player p) {
         return getPlayerInTurn() != null && getPlayerInTurn().getId().equals(p.getId());
     }
-    
+
     /**
      * Inicia la partida, elige un turno al azar y devuelve un comando para notificar.
      */
@@ -90,14 +90,14 @@ public class Match {
             // No se puede iniciar con menos de 2 jugadores.
             return new CommandMessage(new String[]{"MESSAGE", "Se necesitan al menos 2 jugadores para iniciar.", "false"});
         }
-        
+
         this.isGameStarted = true;
         this.actualTurn = new Random().nextInt(players.size());
-        
+
         String actualPlayerName = players.get(actualTurn).getId();
         String[] message = {"MESSAGE", "¡La partida ha comenzado! Turno de: " + actualPlayerName, "true"};
-        
-        return new CommandMessage(message);    
+
+        return new CommandMessage(message);
     }
     public boolean isGameStarted() { return isGameStarted; }
 }

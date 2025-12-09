@@ -6,6 +6,7 @@ package Console;
 
 import GUI.Client.Client;
 import GUI.Server.ThreadServidor;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -21,10 +22,12 @@ public class CommandReadyRequest extends Command {
     @Override
     public void processInClient(Client client) {
         String playerName = getParameters()[0];
-        client.getRefFrame().writeMessage(
-            "El jugador '" + playerName + "' quiere unirse. "
-            + "Escribe: APPROVE_JOIN " + playerName + " yes | no"
-        );
+        SwingUtilities.invokeLater(() -> {
+            client.getRefFrame().appendLog(
+                "El jugador '" + playerName + "' quiere unirse. "
+                + "Escribe: APPROVE_JOIN " + playerName + " yes | no"
+            );
+        });
     }
 
     @Override
@@ -32,4 +35,3 @@ public class CommandReadyRequest extends Command {
         // Esto no se procesa en servidor → solo en cliente host
     }
 }
-
