@@ -23,14 +23,15 @@ public class Client {
     public ObjectInputStream objectListener;
     public ObjectOutputStream objectSender;
     private ThreadClient threadClient;
-    
+    private Player player;
     private String name;
 
     public Client(ClientFrame refFrame, String name) {
         this.refFrame = refFrame;
         this.name = name;
+        this.player = new Player(name);
+        System.out.println(player);
         this.connect();
-        
     }
     
     private void connect (){

@@ -24,7 +24,6 @@ public class ThreadClient extends Thread{
 
     public ThreadClient(Client client) {
         this.client = client;
-
     }
     
     public void run (){
