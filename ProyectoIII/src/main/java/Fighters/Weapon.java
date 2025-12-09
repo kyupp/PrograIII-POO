@@ -38,6 +38,10 @@ public class Weapon {
     public void setUsed() {
         used = true;
     }
+    
+    public void unSetUsed(){
+        used = false;
+    }
 
     public String getName() {
         return name;

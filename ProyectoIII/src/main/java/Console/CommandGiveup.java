@@ -20,6 +20,21 @@ public class CommandGiveup  extends Command{
     public void processForServer(ThreadServidor threadServidor) {
         this.setIsBroadcast(true);
         threadServidor.isActive = false;
+        sendResponse(threadServidor, "Usted ha decidido retirarse :<");
+        
+        CommandMessage msg = new CommandMessage(
+                new String[]{"MESSAGE", "El usuario: " + threadServidor.name + " ha decidio retirarse", "true"}
+        );
+        
+        threadServidor.getServer().broadcast(msg);
+    }
+    
+    private void sendResponse(ThreadServidor thread, String message) {
+        try {
+            thread.sendPrivateMessage(message);
+        } catch (Exception e) {
+            System.out.println("Error enviando respuesta: " + e.getMessage());
+        }
     }
     
 //    @Override

@@ -22,6 +22,7 @@ public class CommandPassTurn extends Command {
         Match game = threadServidor.getServer().getGame();
         if (game != null){
             game.nextTurn();
+            sendResponse(threadServidor, "Usted ha decidido pasar de turno");
         } else{
             sendResponse(threadServidor, "ERROR: Aun no ha iniciado el juego");
         }
