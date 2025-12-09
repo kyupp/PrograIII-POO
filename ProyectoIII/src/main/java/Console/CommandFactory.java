@@ -37,6 +37,8 @@ public class CommandFactory {
                 return new CommandPassTurn(args);
             case "MUTAL_EXIT":
                 return new CommandMutualExit(args);
+            case "APPROVE_JOIN":
+                return new CommandApproveJoin(args);
             default:
                 return null;
         }

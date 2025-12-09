@@ -23,7 +23,7 @@ public class CommandReadyRequest extends Command {
         String playerName = getParameters()[0];
         client.getRefFrame().writeMessage(
             "El jugador '" + playerName + "' quiere unirse. "
-            + "Escribe: /approve " + playerName + " yes | no"
+            + "Escribe: APPROVE_JOIN " + playerName + " yes | no"
         );
     }
 

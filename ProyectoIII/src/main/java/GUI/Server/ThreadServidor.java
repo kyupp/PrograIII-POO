@@ -39,7 +39,7 @@ public class ThreadServidor extends Thread{
             objectSender = new ObjectOutputStream(socket.getOutputStream());
             objectSender.flush();
             objectListener = new ObjectInputStream(socket.getInputStream());
-            this.gamePlayer = new Player(this.name);
+            System.out.println(name + "     AHAHAHAHAH");
         } catch (IOException ex) {
             System.out.println("Error en ThreadServidor constructor: " + ex.getMessage());
         } catch (Exception ex){
@@ -162,4 +162,10 @@ public class ThreadServidor extends Thread{
             System.out.println("Error enviando confirmación: " + e.getMessage());
         }
     }
+
+    public void setGamePlayer(Player gamePlayer) {
+        this.gamePlayer = gamePlayer;
+    }
+    
+    
 }

@@ -23,6 +23,7 @@ public class CommandName extends Command{
         
         threadServidor.name = getParameters()[1];
         threadServidor.showAllClients();
+        System.out.println(threadServidor.name + "      MIMIMI");
     }
     
     @Override
