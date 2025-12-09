@@ -1,8 +1,0 @@
-# Archivos de la IDE IntelliJ
-.idea/
-
-# Carpetas de compilación y empaquetado de Maven
-target/
-
-# Logs y otros archivos temporales
-*.log
