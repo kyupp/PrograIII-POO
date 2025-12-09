@@ -40,10 +40,16 @@ public class CommandSelectPlayer extends Command {
                         sendResponse(threadServidor, "El usuario '" + name + "' no esta activo.");
                         return;
                     }
-
-                    //TODO: Agregar la info del jugador.
-                    return;
-                }
+                    int deaths = clientThread.getGamePlayer().getDeaths();
+                    int defeats = clientThread.getGamePlayer().getDefeats();
+                    int failedAttacks = clientThread.getGamePlayer().getFailedAttacks();
+                    int successfullAttacks = clientThread.getGamePlayer().getSuccessfulAttacks();
+                    int surronders = clientThread.getGamePlayer().getSurrenders();
+                    int wins = clientThread.getGamePlayer().getWins();
+                    
+                    String data = "\nJugador: " + name + "\n    Deaths: " + deaths + "\n    Defeats: " + defeats + "\n    FailedAttacks: " + failedAttacks + "\n    Successfull attacks: " + successfullAttacks + "\n    Surronders: " + surronders + "\n    Winss: " + wins;
+                    sendResponse(threadServidor, data);
+                 }
 
             }
         }
