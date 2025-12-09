@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Match;
 
 import Console.Command;
@@ -42,7 +38,11 @@ public class Match {
 
     public Player getPlayerInTurn(){
         if (players.isEmpty()) return null;
-        return players.get(this.actualTurn);
+        return players.get(this.actualTurn);    
+    }
+    
+    public int getActualTurn() {
+        return actualTurn;
     }
 
     public void nextTurn(){
